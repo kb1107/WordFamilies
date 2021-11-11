@@ -31,6 +31,18 @@ namespace WordFamilies
             {
                 CurrentWord += "*"; // initialise un-guessed letters to asterisks
             }
+
+            List<string> correctLengthWords = new List<string>();
+            // Remove all words of the wrong length
+            foreach (string word in WordList)
+            {
+                if (word.Length == WordLength)
+                {
+                    correctLengthWords.Add(word);
+                }
+            }
+            // Update wordlist with only words of the correct length
+            WordList = correctLengthWords;
         }
 
         public void PromptGuess()
@@ -63,21 +75,73 @@ namespace WordFamilies
             }
 
             LastGuess = guess; // update valid guess
+            GuessedLetters.Add(guess); // Add to list
         }
 
         public void PartitionWordList()
         {
-            // Find largest family
-            // Remove old words from word list
-            // Update current word
-            // if current word contains last guess
-            //  display correct guess
-            //  display word
-            // else
-            //  guesses left--
-            //  display wrong guess
-            //  display word
+            List<string> wordsWithoutGuess = new List<string>();
+            List<string> wordsWithOneGuess = new List<string>();
+            List<string> wordsWithTwoGuesses = new List<string>();
+            List<string> wordsWithThreeGuesses = new List<string>();
+            List<string> wordsWithFourPlusGuesses = new List<string>();
+            List<List<string>> wordFamilies = new List<List<string>>(); // holds all sorted word families
 
+            // Add words families to list
+            wordFamilies.Add(wordsWithoutGuess);
+            wordFamilies.Add(wordsWithOneGuess);
+            wordFamilies.Add(wordsWithTwoGuesses);
+            wordFamilies.Add(wordsWithThreeGuesses);
+            wordFamilies.Add(wordsWithFourPlusGuesses);
+
+
+            foreach (string word in WordList)
+            {
+                int numberOfOccurences = 0; // counter for number of times guessed letter occurs in each word
+
+                foreach (char c in word) // count occurrences of guessed letter
+                {
+                    if (c.ToString() == LastGuess)
+                    {
+                        numberOfOccurences++;
+                    }
+                }
+
+                if (numberOfOccurences == 0)
+                {
+                    wordsWithoutGuess.Add(word);
+                }
+                else if (numberOfOccurences == 1)
+                {
+                    wordsWithOneGuess.Add(word);
+                }
+                else if (numberOfOccurences == 2)
+                {
+                    wordsWithTwoGuesses.Add(word);
+                }
+                else if (numberOfOccurences == 3)
+                {
+                    wordsWithThreeGuesses.Add(word);
+                }
+                else
+                {
+                    wordsWithFourPlusGuesses.Add(word);
+                }
+            }
+
+            List<string> largestFamily = new List<string>(); // holds the largest family of words
+
+            // Find largest family
+            foreach (List<string> family in wordFamilies)
+            {
+                if (family.Count > largestFamily.Count)
+                {
+                    largestFamily = family;
+                }
+            }
+
+            // Update wordlist to largest family
+            WordList = largestFamily;
         }
 
         public void CheckGameStatus()
@@ -114,7 +178,11 @@ namespace WordFamilies
                 Display.PrintWordState(CurrentWord);
                 PromptGuess();
                 PartitionWordList();
+                UpdateWord();
+                UpdateGuesses();
                 CheckGameStatus();
+                //for testing
+                Console.WriteLine("wordlist count = " + WordList.Count);
             }
         }
 
@@ -135,6 +203,48 @@ namespace WordFamilies
             }
 
             return guess == "y";
+        }
+
+        public void UpdateWord()
+        {
+            StringBuilder newWordState = new StringBuilder(WordList[0]);
+
+            // Reveal correctly guessed letters, keep hidden letters as asterisks
+            for (int i = 0; i < WordList[0].Length; i++)
+            {
+                if (GuessedLetters.Contains(WordList[0][i].ToString()))
+                {
+                    newWordState[i] = WordList[0][i];
+                }
+                else
+                {
+                    newWordState[i] = '*';
+                }
+            }
+
+            CurrentWord = newWordState.ToString();
+        }
+
+        public void UpdateGuesses()
+        {
+            // If guess was unsuccessful, deduct 1
+            if (!CurrentWord.Contains(LastGuess))
+            {
+                GuessesLeft--;
+                Display.PrintWrongGuess(LastGuess);
+            }
+            else // correct guess
+            {
+                int count = 0; // used to count occurrences of correct guess
+                foreach (char c in CurrentWord)
+                {
+                    if (c.ToString() == LastGuess)
+                    {
+                        count++;
+                    }
+                }
+                Display.PrintCorrectGuess(LastGuess, count);
+            }
         }
     }
 }

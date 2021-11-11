@@ -8,7 +8,7 @@ namespace WordFamilies
     {
         public static void PrintWordState(string word)
         {
-            Console.WriteLine("Word: " + word);
+            Console.WriteLine("\nWord: " + word);
         }
 
         public static void PrintGuesses(List<string> letters, int guesses)
@@ -38,7 +38,7 @@ namespace WordFamilies
 
         public static void PrintCorrectGuess(string guess, int occurences)
         {
-            Console.WriteLine("Yes, the word contains {0} {1} times.", guess, occurences);
+            Console.WriteLine("Yes, the word contains {0} {1} time(s).", guess, occurences);
         }
 
         public static void PrintWrongGuess(string guess)
