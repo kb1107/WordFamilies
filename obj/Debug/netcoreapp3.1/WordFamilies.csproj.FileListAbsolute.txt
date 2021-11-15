@@ -11,3 +11,17 @@ C:\Users\Work\Documents\Development\GitHub\WordFamilies\obj\Debug\netcoreapp3.1\
 C:\Users\Work\Documents\Development\GitHub\WordFamilies\obj\Debug\netcoreapp3.1\WordFamilies.dll
 C:\Users\Work\Documents\Development\GitHub\WordFamilies\obj\Debug\netcoreapp3.1\WordFamilies.pdb
 C:\Users\Work\Documents\Development\GitHub\WordFamilies\obj\Debug\netcoreapp3.1\WordFamilies.genruntimeconfig.cache
+C:\Users\KieranB\Documents\GitHub\WordFamilies\bin\Debug\netcoreapp3.1\WordFamilies.exe
+C:\Users\KieranB\Documents\GitHub\WordFamilies\bin\Debug\netcoreapp3.1\WordFamilies.deps.json
+C:\Users\KieranB\Documents\GitHub\WordFamilies\bin\Debug\netcoreapp3.1\WordFamilies.runtimeconfig.json
+C:\Users\KieranB\Documents\GitHub\WordFamilies\bin\Debug\netcoreapp3.1\WordFamilies.runtimeconfig.dev.json
+C:\Users\KieranB\Documents\GitHub\WordFamilies\bin\Debug\netcoreapp3.1\WordFamilies.dll
+C:\Users\KieranB\Documents\GitHub\WordFamilies\bin\Debug\netcoreapp3.1\WordFamilies.pdb
+C:\Users\KieranB\Documents\GitHub\WordFamilies\obj\Debug\netcoreapp3.1\WordFamilies.csproj.AssemblyReference.cache
+C:\Users\KieranB\Documents\GitHub\WordFamilies\obj\Debug\netcoreapp3.1\WordFamilies.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\KieranB\Documents\GitHub\WordFamilies\obj\Debug\netcoreapp3.1\WordFamilies.AssemblyInfoInputs.cache
+C:\Users\KieranB\Documents\GitHub\WordFamilies\obj\Debug\netcoreapp3.1\WordFamilies.AssemblyInfo.cs
+C:\Users\KieranB\Documents\GitHub\WordFamilies\obj\Debug\netcoreapp3.1\WordFamilies.csproj.CoreCompileInputs.cache
+C:\Users\KieranB\Documents\GitHub\WordFamilies\obj\Debug\netcoreapp3.1\WordFamilies.dll
+C:\Users\KieranB\Documents\GitHub\WordFamilies\obj\Debug\netcoreapp3.1\WordFamilies.pdb
+C:\Users\KieranB\Documents\GitHub\WordFamilies\obj\Debug\netcoreapp3.1\WordFamilies.genruntimeconfig.cache

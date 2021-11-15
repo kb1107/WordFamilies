@@ -188,21 +188,10 @@ namespace WordFamilies
 
         public bool PlayAgain()
         {
-            string guess = Console.ReadLine().ToLower().Trim(); // get guess from user
-            bool validGuess = guess == "y" || guess == "n"; // check validity of input
+            Display.PrintPlayAgain();
+            string input = Console.ReadLine().ToLower().Trim(); // get input from user
 
-            if (!validGuess)
-            {
-                do
-                {
-                    Display.PrintInvalidInput();
-                    guess = Console.ReadLine().ToLower().Trim();
-
-                } while (!validGuess);
-
-            }
-
-            return guess == "y";
+            return input == "y";
         }
 
         public void UpdateWord()

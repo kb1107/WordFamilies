@@ -63,9 +63,8 @@ namespace WordFamilies
 
         public static void PrintPlayAgain()
         {
-            Console.WriteLine("Play again?");
-            Console.Write("Enter y or n: ");
-
+            Console.WriteLine("Enter 'y' to play again or any other input to quit.");
+            Console.WriteLine("Play again?: ");
         }
     }
 }
