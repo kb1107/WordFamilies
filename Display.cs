@@ -26,6 +26,16 @@ namespace WordFamilies
             Console.WriteLine("Enter guess: ");
         }
 
+        public static void PrintIncorrectGuessLength()
+        {
+            Console.WriteLine("Invalid input. Enter a single letter.");
+        }
+
+        public static void PrintAlreadyGuessedLetterError()
+        {
+            Console.WriteLine("You have already guessed that letter. Try again.");
+        }
+
         public static void PrintGameWon(string word)
         {
             Console.WriteLine("You won! Congratulations! The word was: " + word);

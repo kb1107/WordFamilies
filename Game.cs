@@ -58,14 +58,14 @@ namespace WordFamilies
                 {
                     if (guess.Length != 1)
                     {
-                        //Display.PrintInvalidInput();
-                        //Display.PromptGuess();
-                        Console.WriteLine("Invalid input. Enter a single letter.");
+                        Display.PrintIncorrectGuessLength();
+                        Display.PromptGuess();
                     }
 
                     if (GuessedLetters.Contains(guess))
                     {
-                        Console.WriteLine("You have already guessed that letter. Try again.");
+                        Display.PrintAlreadyGuessedLetterError();
+                        Display.PromptGuess();
                     }
 
                     guess = Console.ReadLine().ToLower().Trim();
