@@ -144,6 +144,61 @@ namespace WordFamilies
             WordList = largestFamily;
         }
 
+        public void FindLargestNumberOfOccurrences()
+        {
+            Dictionary<int, int> indexOccurrences = new Dictionary<int, int>(); // holds number of occurrences of last guessed letter for each index in every word in wordlist
+
+            foreach (string word in WordList)
+            {
+                for (int i = 0; i < WordLength; i++)
+                {
+                    if (word[i].ToString() == LastGuess)
+                    {
+                        if (indexOccurrences.ContainsKey(i)) // check if dictionary already contains a value for the letter index
+                        {
+                            indexOccurrences[i]++;
+                        }
+                        else
+                        {
+                            indexOccurrences.Add(i, 1);
+                        }
+                    }
+                }
+            }
+
+            List<int> maxValueIndexes = new List<int>(); // holds indexes of letters with max number of occurrrences - needs to hold multiple in case multiple letter indexes have the ame value
+            int maxValue = 0; // counter for the maximum number of occurrences
+            // find largest value in dictionary
+            foreach (int i in indexOccurrences.Keys)
+            {
+                if (indexOccurrences[i] > maxValue)
+                {
+                    maxValue = indexOccurrences[i];
+                }
+            }
+            // add index(es) with the max value to list
+            foreach (int i in indexOccurrences.Keys)
+            {
+                if (indexOccurrences[i] == maxValue)
+                {
+                    maxValueIndexes.Add(i);
+                }
+            }
+
+            
+            //remove other words from word list
+            foreach (string word in WordList.ToList())
+            {
+                foreach (int i in maxValueIndexes)
+                {
+                    if (word[i].ToString() != LastGuess)
+                    {
+                        WordList.Remove(word);
+                    }
+                }
+            }
+        }
+
         public void CheckGameStatus()
         {
             if (GuessesLeft < 1)
@@ -178,6 +233,7 @@ namespace WordFamilies
                 Display.PrintWordState(CurrentWord);
                 PromptGuess();
                 PartitionWordList();
+                FindLargestNumberOfOccurrences();
                 UpdateWord();
                 UpdateGuesses();
                 CheckGameStatus();
@@ -198,7 +254,7 @@ namespace WordFamilies
         {
             StringBuilder newWordState = new StringBuilder(WordList[0]);
 
-            // Reveal correctly guessed letters, keep hidden letters as asterisks
+            // Reveal correctly guessed letters, keep hidden letters as dashes
             for (int i = 0; i < WordList[0].Length; i++)
             {
                 if (GuessedLetters.Contains(WordList[0][i].ToString()))
@@ -207,7 +263,7 @@ namespace WordFamilies
                 }
                 else
                 {
-                    newWordState[i] = '*';
+                    newWordState[i] = '-';
                 }
             }
 
