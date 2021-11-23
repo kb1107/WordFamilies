@@ -210,13 +210,20 @@ namespace WordFamilies
                 }
                 else
                 {
-                    Display.PrintGameWon(WordList[0]);
-                    GameOver = true;
+                    if (CurrentWord.Contains('-'))
+                    {
+                        Display.PrintGameLost(WordList[0]);
+                        GameOver = true;
+                    }
+                    else
+                    {
+                        Display.PrintGameWon(WordList[0]);
+                    }
                 }
             }
             else
             {
-                if (WordList.Count == 1)
+                if (!CurrentWord.Contains('-'))
                 {
                     Display.PrintGameWon(WordList[0]);
                     GameOver = true;
@@ -229,6 +236,9 @@ namespace WordFamilies
 
             while (!GameOver)
             {
+                //for testing
+                Console.WriteLine("wordlist count = " + WordList.Count);
+
                 Display.PrintGuesses(GuessedLetters, GuessesLeft);
                 Display.PrintWordState(CurrentWord);
                 PromptGuess();
@@ -236,9 +246,7 @@ namespace WordFamilies
                 FindLargestNumberOfOccurrences();
                 UpdateWord();
                 UpdateGuesses();
-                CheckGameStatus();
-                //for testing
-                Console.WriteLine("wordlist count = " + WordList.Count);
+                CheckGameStatus();                
             }
         }
 
@@ -252,10 +260,10 @@ namespace WordFamilies
 
         public void UpdateWord()
         {
-            StringBuilder newWordState = new StringBuilder(WordList[0]);
-
+            StringBuilder newWordState = new StringBuilder(CurrentWord, WordLength);
+            
             // Reveal correctly guessed letters, keep hidden letters as dashes
-            for (int i = 0; i < WordList[0].Length; i++)
+            for (int i = 0; i < WordLength; i++)
             {
                 if (GuessedLetters.Contains(WordList[0][i].ToString()))
                 {
