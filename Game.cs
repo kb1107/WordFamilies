@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.IO;
+using System.Net.NetworkInformation;
 using System.Text;
 
 namespace WordFamilies
@@ -29,7 +30,7 @@ namespace WordFamilies
 
             for (int i = 0; i < WordLength; i++)
             {
-                CurrentWord += "*"; // initialise un-guessed letters to asterisks
+                CurrentWord += "-"; // initialise un-guessed letters to dashes
             }
 
             List<string> correctLengthWords = new List<string>();
@@ -78,126 +79,212 @@ namespace WordFamilies
             GuessedLetters.Add(guess); // Add to list
         }
 
-        public void PartitionWordList()
+        public void SortFamilies()
         {
-            List<string> wordsWithoutGuess = new List<string>();
-            List<string> wordsWithOneGuess = new List<string>();
-            List<string> wordsWithTwoGuesses = new List<string>();
-            List<string> wordsWithThreeGuesses = new List<string>();
-            List<string> wordsWithFourPlusGuesses = new List<string>();
-            List<List<string>> wordFamilies = new List<List<string>>(); // holds all sorted word families
-
-            // Add words families to list
-            wordFamilies.Add(wordsWithoutGuess);
-            wordFamilies.Add(wordsWithOneGuess);
-            wordFamilies.Add(wordsWithTwoGuesses);
-            wordFamilies.Add(wordsWithThreeGuesses);
-            wordFamilies.Add(wordsWithFourPlusGuesses);
-
+            Dictionary<string, int> families = new Dictionary<string, int>();
 
             foreach (string word in WordList)
             {
-                int numberOfOccurences = 0; // counter for number of times guessed letter occurs in each word
+                StringBuilder familyCode = new StringBuilder(WordLength); // holds a string containing 1 and 0 in relation to whether the corresponding index matches users last guess
 
-                foreach (char c in word) // count occurrences of guessed letter
+                foreach (char c in word)
                 {
                     if (c.ToString() == LastGuess)
                     {
-                        numberOfOccurences++;
+                        familyCode.Append('1'); // 1 = match
+                    }
+                    else
+                    {
+                        familyCode.Append('0'); // 0 = no match
                     }
                 }
 
-                if (numberOfOccurences == 0)
+                if (families.ContainsKey(familyCode.ToString()))
                 {
-                    wordsWithoutGuess.Add(word);
-                }
-                else if (numberOfOccurences == 1)
-                {
-                    wordsWithOneGuess.Add(word);
-                }
-                else if (numberOfOccurences == 2)
-                {
-                    wordsWithTwoGuesses.Add(word);
-                }
-                else if (numberOfOccurences == 3)
-                {
-                    wordsWithThreeGuesses.Add(word);
+                    families[familyCode.ToString()]++;
                 }
                 else
                 {
-                    wordsWithFourPlusGuesses.Add(word);
+                    families.Add(familyCode.ToString(), 1); // add first instance of word family to dict.
                 }
             }
 
-            List<string> largestFamily = new List<string>(); // holds the largest family of words
-
-            // Find largest family
-            foreach (List<string> family in wordFamilies)
-            {
-                if (family.Count > largestFamily.Count)
-                {
-                    largestFamily = family;
-                }
-            }
-
-            // Update wordlist to largest family
-            WordList = largestFamily;
+            GetLargestFamily(families);
         }
 
-        public void FindLargestNumberOfOccurrences()
+        private void GetLargestFamily(Dictionary<string, int> familyDictionary)
         {
-            Dictionary<int, int> indexOccurrences = new Dictionary<int, int>(); // holds number of occurrences of last guessed letter for each index in every word in wordlist
+            string code = ""; // holds the code which corresponds to the number/ index of last guess occurrences
+            int familyCount = 0; // holds the largest number of elements in dict.
 
-            foreach (string word in WordList)
+            // Get largest family
+            foreach (string key in familyDictionary.Keys)
+            {
+                if (familyDictionary[key] > familyCount)
+                {
+                    code = key;
+                    familyCount = familyDictionary[key];
+                }
+
+                //---TESTING---
+                Console.WriteLine("Family Code: " + key + " Count: " + familyDictionary[key]);
+            }
+
+            //---TESTING---
+            Console.WriteLine("Family Chosen: " + code);
+
+            // remove words not in largest family
+            foreach (string word in WordList.ToList())
             {
                 for (int i = 0; i < WordLength; i++)
                 {
-                    if (word[i].ToString() == LastGuess)
+                    if (word[i].ToString() == LastGuess && code[i] == '0')
                     {
-                        if (indexOccurrences.ContainsKey(i)) // check if dictionary already contains a value for the letter index
-                        {
-                            indexOccurrences[i]++;
-                        }
-                        else
-                        {
-                            indexOccurrences.Add(i, 1);
-                        }
+                        WordList.Remove(word);
                     }
-                }
-            }
-
-            List<int> maxValueIndexes = new List<int>(); // holds indexes of letters with max number of occurrrences - needs to hold multiple in case multiple letter indexes have the ame value
-            int maxValue = 0; // counter for the maximum number of occurrences
-            // find largest value in dictionary
-            foreach (int i in indexOccurrences.Keys)
-            {
-                if (indexOccurrences[i] > maxValue)
-                {
-                    maxValue = indexOccurrences[i];
-                }
-            }
-            // add index(es) with the max value to list
-            foreach (int i in indexOccurrences.Keys)
-            {
-                if (indexOccurrences[i] == maxValue)
-                {
-                    maxValueIndexes.Add(i);
-                }
-            }
-
-            
-            //remove other words from word list
-            foreach (string word in WordList.ToList())
-            {
-                foreach (int i in maxValueIndexes)
-                {
-                    if (word[i].ToString() != LastGuess)
+                    else if (word[i].ToString() == LastGuess && code[i] == '1')
+                    {
+                        continue;
+                    }
+                    else if (word[i].ToString() != LastGuess && code[i] == '0')
+                    {
+                        continue;
+                    }
+                    else if (word[i].ToString() != LastGuess && code[i] == '1')
                     {
                         WordList.Remove(word);
                     }
                 }
             }
         }
+
+        //public void PartitionWordList()
+        //{
+        //    List<string> wordsWithoutGuess = new List<string>();
+        //    List<string> wordsWithOneGuess = new List<string>();
+        //    List<string> wordsWithTwoGuesses = new List<string>();
+        //    List<string> wordsWithThreeGuesses = new List<string>();
+        //    List<string> wordsWithFourGuesses = new List<string>();
+        //    List<string> wordsWithFivePlusGuesses = new List<string>();
+        //    List<List<string>> wordFamilies = new List<List<string>>(); // holds all sorted word families
+
+        //    // Add words families to list
+        //    wordFamilies.Add(wordsWithoutGuess);
+        //    wordFamilies.Add(wordsWithOneGuess);
+        //    wordFamilies.Add(wordsWithTwoGuesses);
+        //    wordFamilies.Add(wordsWithThreeGuesses);
+        //    wordFamilies.Add(wordsWithFourGuesses);
+        //    wordFamilies.Add(wordsWithFivePlusGuesses);
+
+        //    foreach (string word in WordList)
+        //    {
+        //        int numberOfOccurences = 0; // counter for number of times guessed letter occurs in each word
+
+        //        foreach (char c in word) // count occurrences of guessed letter
+        //        {
+        //            if (c.ToString() == LastGuess)
+        //            {
+        //                numberOfOccurences++;
+        //            }
+        //        }
+
+        //        if (numberOfOccurences == 0)
+        //        {
+        //            wordsWithoutGuess.Add(word);
+        //        }
+        //        else if (numberOfOccurences == 1)
+        //        {
+        //            wordsWithOneGuess.Add(word);
+        //        }
+        //        else if (numberOfOccurences == 2)
+        //        {
+        //            wordsWithTwoGuesses.Add(word);
+        //        }
+        //        else if (numberOfOccurences == 3)
+        //        {
+        //            wordsWithThreeGuesses.Add(word);
+        //        }
+        //        else if (numberOfOccurences == 4)
+        //        {
+        //            wordsWithFourGuesses.Add(word);
+        //        }
+        //        else if (numberOfOccurences >= 5)
+        //        {
+        //            wordsWithFivePlusGuesses.Add(word);
+        //        }
+        //    }
+
+        //    List<string> largestFamily = new List<string>(); // holds the largest family of words
+        //    int wordCount = 0; // holds number of words in word family
+
+        //    // Find largest family
+        //    foreach (List<string> family in wordFamilies)
+        //    {
+        //        if (family.Count > wordCount)
+        //        {
+        //            wordCount = family.Count; // update current largest total
+        //            largestFamily = family; // assign current largest family
+        //        }
+        //    }
+
+        //    // Update wordlist to largest family
+        //    WordList = largestFamily;
+        //}
+
+        //public void FindLargestNumberOfOccurrences()
+        //{
+        //    Dictionary<int, int> indexOccurrences = new Dictionary<int, int>(); // holds number of occurrences of last guessed letter for each index in every word in wordlist
+
+        //    foreach (string word in WordList)
+        //    {
+        //        for (int i = 0; i < WordLength; i++)
+        //        {
+        //            if (word[i].ToString() == LastGuess)
+        //            {
+        //                if (indexOccurrences.ContainsKey(i)) // check if dictionary already contains a value for the letter index
+        //                {
+        //                    indexOccurrences[i]++;
+        //                }
+        //                else
+        //                {
+        //                    indexOccurrences.Add(i, 1);
+        //                }
+        //            }
+        //        }
+        //    }
+
+        //    List<int> maxValueIndexes = new List<int>(); // holds indexes of letters with max number of occurrences - needs to hold multiple in case multiple letter indexes have the ame value
+        //    int maxValue = 0; // counter for the maximum number of occurrences
+        //    // find largest value in dictionary
+        //    foreach (int i in indexOccurrences.Keys)
+        //    {
+        //        if (indexOccurrences[i] > maxValue)
+        //        {
+        //            maxValue = indexOccurrences[i];
+        //        }
+        //    }
+
+        //    // add index(es) with the max value to list
+        //    foreach (int i in indexOccurrences.Keys)
+        //    {
+        //        if (indexOccurrences[i] == maxValue)
+        //        {
+        //            maxValueIndexes.Add(i);
+        //        }
+        //    }
+
+        //    //remove other words from word list
+        //    foreach (string word in WordList.ToList())
+        //    {
+        //        foreach (int i in maxValueIndexes)
+        //        {
+        //            if (word[i].ToString() != LastGuess)
+        //            {
+        //                WordList.Remove(word);
+        //            }
+        //        }
+        //    }
+        //}
 
         public void CheckGameStatus()
         {
@@ -242,8 +329,11 @@ namespace WordFamilies
                 Display.PrintGuesses(GuessedLetters, GuessesLeft);
                 Display.PrintWordState(CurrentWord);
                 PromptGuess();
-                PartitionWordList();
-                FindLargestNumberOfOccurrences();
+                //PartitionWordList();
+                //FindLargestNumberOfOccurrences();
+
+                SortFamilies(); //new
+
                 UpdateWord();
                 UpdateGuesses();
                 CheckGameStatus();                
