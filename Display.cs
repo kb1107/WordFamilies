@@ -29,12 +29,7 @@ namespace WordFamilies
 
         public static void PromptGuess()
         {
-            Console.WriteLine("Enter guess: ");
-        }
-
-        public static void PrintIncorrectGuessLength()
-        {
-            Console.WriteLine("Invalid input. Enter a single letter.");
+            Console.Write("Enter guess: ");
         }
 
         public static void PrintAlreadyGuessedLetterError()
@@ -54,12 +49,12 @@ namespace WordFamilies
 
         public static void PrintCorrectGuess(char guess, int occurences)
         {
-            Console.WriteLine("Yes, the word contains {0} {1} time(s).", guess, occurences);
+            Console.WriteLine("Yes, the word contains {0} {1} time(s).\n", guess, occurences);
         }
 
         public static void PrintWrongGuess(char guess)
         {
-            Console.WriteLine("Sorry, the word does not contain any {0}'s.", guess);
+            Console.WriteLine("Sorry, the word does not contain any {0}'s.\n", guess);
         }
 
         public static void PrintInvalidInput()
