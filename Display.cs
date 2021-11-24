@@ -11,11 +11,11 @@ namespace WordFamilies
             Console.WriteLine("\nWord: " + word);
         }
 
-        public static void PrintGuesses(List<string> letters, int guesses)
+        public static void PrintGuesses(List<char> letters, int guesses)
         {
             Console.WriteLine("You have {0} guesses left.", guesses);
             Console.Write("Used letters: ");
-            foreach (string letter in letters)
+            foreach (char letter in letters)
             {
                 Console.Write(letter + " ");
             }
@@ -46,12 +46,12 @@ namespace WordFamilies
             Console.WriteLine("You lose! The word was: " + word);
         }
 
-        public static void PrintCorrectGuess(string guess, int occurences)
+        public static void PrintCorrectGuess(char guess, int occurences)
         {
             Console.WriteLine("Yes, the word contains {0} {1} time(s).", guess, occurences);
         }
 
-        public static void PrintWrongGuess(string guess)
+        public static void PrintWrongGuess(char guess)
         {
             Console.WriteLine("Sorry, the word does not contain any {0}'s.", guess);
         }
