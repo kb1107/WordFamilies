@@ -21,6 +21,12 @@ namespace WordFamilies
             }
         }
 
+        public static void PromptDebugMenu()
+        {
+            Console.WriteLine("Display Debug Menu?");
+            Console.WriteLine("Enter 'y' for yes, any other input for no...");
+        }
+
         public static void PromptGuess()
         {
             Console.WriteLine("Enter guess: ");
@@ -65,6 +71,22 @@ namespace WordFamilies
         {
             Console.WriteLine("Enter 'y' to play again or any other input to quit.");
             Console.WriteLine("Play again?: ");
+        }
+
+        public static void PrintWordlistCount(int count)
+        {
+            Console.WriteLine("---DEBUG--- Wordlist Count = " + count);
+
+        }
+
+        public static void PrintWordFamilyCodesAndValues(string family, int count)
+        {
+            Console.WriteLine("Family Code: " + family + " Count: " + count);
+        }
+
+        public static void PrintWordFamilyChosen(string family)
+        {
+            Console.WriteLine("Family Chosen: " + family);
         }
     }
 }

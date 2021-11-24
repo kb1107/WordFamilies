@@ -12,12 +12,14 @@ namespace WordFamilies
         List<string> WordList { get; set; } // holds all possible words
         List<char> GuessedLetters { get; set; } // holds users guessed letters
         // difficulty level always holds easy for the moment. Will implement hard later.
-        private string DifficultyLevel { get; set; } // holds either 'easy' or 'hard' - the level of difficulty chosen by the user.
+        string DifficultyLevel { get; set; } // holds either 'easy' or 'hard' - the level of difficulty chosen by the user.
         int WordLength { get; set; } // holds the number of letters of the word being guessed
-        private int GuessesLeft { get; set; } // holds the number of guesses the user has left
+        int GuessesLeft { get; set; } // holds the number of guesses the user has left
         string CurrentWord { get; set; } // holds the state of the current word
         char LastGuess { get; set; } // holds the last guess entered by the user
-        private bool GameOver { get; set; }
+        bool GameOver { get; set; }
+        private bool DebugMenu { get; set; } // holds value whether or not to display the debug menu
+
 
         public void Initialise()
         {
@@ -44,6 +46,15 @@ namespace WordFamilies
             }
             // Update wordlist with only words of the correct length
             WordList = correctLengthWords;
+            DebugMenu = PromptDebugMenu();
+        }
+
+        public bool PromptDebugMenu()
+        {
+            // Display prompt message to user
+            Display.PromptDebugMenu();
+
+            return Console.ReadLine().ToLower().Trim() == "y";
         }
 
         public void PromptGuess()
@@ -125,11 +136,19 @@ namespace WordFamilies
                 }
 
                 //---TESTING---
-                Console.WriteLine("Family Code: " + key + " Count: " + familyDictionary[key]);
+                //Console.WriteLine("Family Code: " + key + " Count: " + familyDictionary[key]);
+                if (DebugMenu)
+                {
+                    Display.PrintWordFamilyCodesAndValues(key, familyDictionary[key]);
+                }
             }
 
             //---TESTING---
-            Console.WriteLine("Family Chosen: " + code);
+            //Console.WriteLine("Family Chosen: " + code);
+            if (DebugMenu)
+            {
+                Display.PrintWordFamilyChosen(code);
+            }
 
             // remove words not in largest family
             foreach (string word in WordList.ToList())
@@ -193,17 +212,14 @@ namespace WordFamilies
 
             while (!GameOver)
             {
-                //for testing
-                Console.WriteLine("wordlist count = " + WordList.Count);
-
+                if (DebugMenu)
+                {
+                    Display.PrintWordlistCount(WordList.Count);
+                }
                 Display.PrintGuesses(GuessedLetters, GuessesLeft);
                 Display.PrintWordState(CurrentWord);
                 PromptGuess();
-                //PartitionWordList();
-                //FindLargestNumberOfOccurrences();
-
                 SortFamilies(); //new
-
                 UpdateWord();
                 UpdateGuesses();
                 CheckGameStatus();                
