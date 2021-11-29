@@ -37,8 +37,8 @@ namespace WordFamilies
             }
 
             List<string> correctLengthWords = new List<string>();
-            // Remove all words of the wrong length
-            foreach (string word in WordList)
+
+            foreach (string word in WordList) // Remove all words of the wrong length
             {
                 if (word.Length == WordLength)
                 {
@@ -85,7 +85,7 @@ namespace WordFamilies
             // Display prompt message to user
             Display.PromptDebugMenu();
 
-            return Console.ReadLine()?.ToLower().Trim() == "y";
+            return Console.ReadLine()?.ToLower().Trim() == "y"; // y=true, any other input=false
         }
 
         public void PromptGuess()
@@ -112,7 +112,12 @@ namespace WordFamilies
             GuessedLetters.Add(guess);
         }
 
-        public void SortFamilies()
+        /// <summary>
+        /// Maps each word family to a code of 1's and 0's relating to the number of occurrences of the last guess.
+        /// Instantiates a dictionary of the word families and the number of elements in each.
+        /// Calls GetLargestFamily, passing the dictionary as an argument.
+        /// </summary>
+        public Dictionary<string, int> SortFamilies()
         {
             Dictionary<string, int> families = new Dictionary<string, int>();
 
@@ -142,9 +147,14 @@ namespace WordFamilies
                 }
             }
 
-            GetLargestFamily(families);
+            return families;
         }
 
+        /// <summary>
+        /// Sorts a dictionary of word families, selecting the family with the largest number of elements.
+        /// Removes all words from WordList that are not in the selected family.
+        /// </summary>
+        /// <param name="familyDictionary"></param>
         private void GetLargestFamily(Dictionary<string, int> familyDictionary)
         {
             string code = ""; // holds the code which corresponds to the number/ index of last guess occurrences
@@ -239,7 +249,8 @@ namespace WordFamilies
                 Display.PrintGuesses(GuessedLetters, GuessesLeft);
                 Display.PrintWordState(CurrentWord);
                 PromptGuess();
-                SortFamilies(); //new
+                Dictionary<string, int> sortedFamilies = SortFamilies(); //new
+                GetLargestFamily(sortedFamilies);
                 UpdateWord();
                 UpdateGuesses();
                 CheckGameStatus();                

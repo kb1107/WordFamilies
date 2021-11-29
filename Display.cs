@@ -13,7 +13,7 @@ namespace WordFamilies
 
         public static void PrintGuesses(List<char> letters, int guesses)
         {
-            Console.WriteLine("You have {0} guesses left.", guesses);
+            Console.WriteLine("You have {0} guess(es) left.", guesses);
             Console.Write("Used letters: ");
             foreach (char letter in letters)
             {
@@ -54,11 +54,13 @@ namespace WordFamilies
         public static void PrintGameWon(string word)
         {
             Console.WriteLine("You won! Congratulations! The word was: " + word);
+            Console.WriteLine();
         }
 
         public static void PrintGameLost(string word)
         {
             Console.WriteLine("You lose! The word was: " + word);
+            Console.WriteLine();
         }
 
         public static void PrintCorrectGuess(char guess, int occurences)
