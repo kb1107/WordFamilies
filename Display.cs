@@ -30,6 +30,11 @@ namespace WordFamilies
 
         }
 
+        public static void PrintDifficultyLevel(string difficultyLevel)
+        {
+            Console.WriteLine("Difficulty Level: " + difficultyLevel);
+        }
+
         public static void PromptDebugMenu()
         {
             Console.WriteLine("Display Debug Menu?");
@@ -68,7 +73,7 @@ namespace WordFamilies
 
         public static void PrintInvalidInput()
         {
-            Console.WriteLine("Invalid Input. Try again: ");
+            Console.WriteLine("Invalid Input. Try again...");
         }
 
         public static void PrintPlayAgain()

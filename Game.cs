@@ -29,7 +29,8 @@ namespace WordFamilies
             WordLength = new Random().Next(4, 13); // Randomise word length 4-12 characters
             GuessesLeft = 2 * WordLength; // user starts with 2x guesses to length of word
             DifficultyLevel = PromptDifficultyLevel(); // Get difficulty (easy or hard) from user
-
+            Display.PrintDifficultyLevel(DifficultyLevel);
+            
             for (int i = 0; i < WordLength; i++)
             {
                 CurrentWord += "-"; // initialise un-guessed letters to dashes
@@ -89,33 +90,26 @@ namespace WordFamilies
 
         public void PromptGuess()
         {
-            Display.PromptGuess();
+            bool validGuess = false; //guess > 96 && guess < 123;
+            char guess = ' '; //Console.ReadLine().ToLower()[0]; // get guess from user
 
-            char guess = Console.ReadLine().ToLower()[0]; // get guess from user
-            bool validGuess = guess > 96 && guess < 123;
-            
-            if (!validGuess)
+            while (!validGuess)
             {
-                do
-                {
-                    if (GuessedLetters.Contains(guess))
-                    {
-                        Display.PrintAlreadyGuessedLetterError();
-                        Display.PromptGuess();
-                    }
-                    else
-                    {
-                        Display.PrintInvalidInput();
-                        Display.PromptGuess();
-                    }
+                Display.PromptGuess();
+                guess = Console.ReadLine().ToLower()[0]; // get guess from user
 
-                    guess = Console.ReadLine().ToLower()[0];
-                    validGuess = guess > 96 && guess < 123;
-                } while (!validGuess);
+                if (GuessedLetters.Contains(guess) || guess < 97 || guess > 122) //check validity of input
+                {
+                    Display.PrintInvalidInput();
+                }
+                else
+                {
+                    validGuess = true;
+                }
             }
 
-            LastGuess = guess; // update valid guess
-            GuessedLetters.Add(guess); // Add to list
+            LastGuess = guess;
+            GuessedLetters.Add(guess);
         }
 
         public void SortFamilies()
@@ -165,16 +159,12 @@ namespace WordFamilies
                     familyCount = familyDictionary[key];
                 }
 
-                //---TESTING---
-                //Console.WriteLine("Family Code: " + key + " Count: " + familyDictionary[key]);
                 if (DebugMenu)
                 {
                     Display.PrintWordFamilyCodesAndValues(key, familyDictionary[key]);
                 }
             }
 
-            //---TESTING---
-            //Console.WriteLine("Family Chosen: " + code);
             if (DebugMenu)
             {
                 Display.PrintWordFamilyChosen(code);
