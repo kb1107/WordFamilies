@@ -28,7 +28,7 @@ namespace WordFamilies
             GuessedLetters = new List<char>();
             WordLength = new Random().Next(4, 13); // Randomise word length 4-12 characters
             GuessesLeft = 2 * WordLength; // user starts with 2x guesses to length of word
-            DifficultyLevel = "easy"; // always easy for now. Will update later.
+            DifficultyLevel = PromptDifficultyLevel(); // Get difficulty (easy or hard) from user
 
             for (int i = 0; i < WordLength; i++)
             {
@@ -49,12 +49,42 @@ namespace WordFamilies
             DebugMenu = PromptDebugMenu();
         }
 
+        private string PromptDifficultyLevel()
+        {
+            bool validInput = false;
+            string input = "";
+
+            while (!validInput)
+            {
+                Display.PromptDifficultyLevel();
+                input = Console.ReadLine().Trim();
+
+                if (input == "1" || input == "2")
+                {
+                    validInput = true;
+                }
+                else
+                {
+                    Display.PrintInvalidInput();
+                }
+            }
+
+            if (input == "1")
+            {
+                return "Easy";
+            }
+            else
+            {
+                return "Hard";
+            }
+        }
+
         public bool PromptDebugMenu()
         {
             // Display prompt message to user
             Display.PromptDebugMenu();
 
-            return Console.ReadLine().ToLower().Trim() == "y";
+            return Console.ReadLine()?.ToLower().Trim() == "y";
         }
 
         public void PromptGuess()

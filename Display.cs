@@ -21,6 +21,15 @@ namespace WordFamilies
             }
         }
 
+        public static void PromptDifficultyLevel()
+        {
+            Console.WriteLine("Choose difficulty level...");
+            Console.WriteLine("1 = EASY");
+            Console.WriteLine("2 = HARD");
+            Console.Write("Enter 1 or 2: ");
+
+        }
+
         public static void PromptDebugMenu()
         {
             Console.WriteLine("Display Debug Menu?");
