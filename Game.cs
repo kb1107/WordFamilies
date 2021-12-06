@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.IO;
 using System.Net.NetworkInformation;
+using System.Runtime.CompilerServices;
 using System.Text;
+using System.Threading;
 
 namespace WordFamilies
 {
@@ -11,15 +13,13 @@ namespace WordFamilies
     {
         List<string> WordList { get; set; } // holds all possible words
         List<char> GuessedLetters { get; set; } // holds users guessed letters
-        // difficulty level always holds easy for the moment. Will implement hard later.
         string DifficultyLevel { get; set; } // holds either 'easy' or 'hard' - the level of difficulty chosen by the user.
         int WordLength { get; set; } // holds the number of letters of the word being guessed
         int GuessesLeft { get; set; } // holds the number of guesses the user has left
         string CurrentWord { get; set; } // holds the state of the current word
         char LastGuess { get; set; } // holds the last guess entered by the user
         bool GameOver { get; set; }
-        private bool DebugMenu { get; set; } // holds value whether or not to display the debug menu
-
+        bool DebugMenu { get; set; } // holds value whether or not to display the debug menu
 
         public void Initialise()
         {
@@ -155,7 +155,7 @@ namespace WordFamilies
         /// Removes all words from WordList that are not in the selected family.
         /// </summary>
         /// <param name="familyDictionary"></param>
-        private void GetLargestFamily(Dictionary<string, int> familyDictionary)
+        public void SortLargestFamily(Dictionary<string, int> familyDictionary)
         {
             string code = ""; // holds the code which corresponds to the number/ index of last guess occurrences
             int familyCount = 0; // holds the largest number of elements in dict.
@@ -181,6 +181,47 @@ namespace WordFamilies
             }
 
             // remove words not in largest family
+            RemoveWordsFromWordList(code);
+        }
+
+        /// <summary>
+        /// This is the method used if the user chooses 'hard' mode.
+        /// Uses a minimax algorithm that looks ahead and gives a weighting to word families that do not reveal letters.
+        /// </summary>
+        /// <param name="familyDictionary"></param>
+        public void SortMinMaxFamily(Dictionary<string, int> familyDictionary)
+        {
+            string code = "";
+            int weight = 0;
+
+            foreach (string key in familyDictionary.Keys)
+            {
+                int wordWeight = 0;
+
+                foreach (char c in key)
+                {
+                    if (c == '0')
+                    {
+                        wordWeight += 10;
+                    }
+                    else if (c == '1')
+                    {
+                        wordWeight += 1;
+                    }
+                }
+
+                if (wordWeight > weight)
+                {
+                    code = key;
+                    weight = wordWeight;
+                }
+            }
+
+            RemoveWordsFromWordList(code);
+        }
+
+        public void RemoveWordsFromWordList(string code)
+        {
             foreach (string word in WordList.ToList())
             {
                 for (int i = 0; i < WordLength; i++)
@@ -249,8 +290,11 @@ namespace WordFamilies
                 Display.PrintGuesses(GuessedLetters, GuessesLeft);
                 Display.PrintWordState(CurrentWord);
                 PromptGuess();
-                Dictionary<string, int> sortedFamilies = SortFamilies(); //new
-                GetLargestFamily(sortedFamilies);
+                Dictionary<string, int> sortedFamilies = SortFamilies(); // word family codes and counts
+                if (DifficultyLevel == "Easy")
+                    SortLargestFamily(sortedFamilies); // if easy sort families by size
+                else            
+                    SortMinMaxFamily(sortedFamilies); // if hard sort families using a minimax algorithm
                 UpdateWord();
                 UpdateGuesses();
                 CheckGameStatus();                
