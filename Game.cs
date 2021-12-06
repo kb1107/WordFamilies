@@ -2,10 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.IO;
-using System.Net.NetworkInformation;
-using System.Runtime.CompilerServices;
 using System.Text;
-using System.Threading;
 
 namespace WordFamilies
 {
@@ -215,8 +212,19 @@ namespace WordFamilies
                     code = key;
                     weight = wordWeight;
                 }
+
+                if (DebugMenu)
+                {
+                    Display.PrintWordFamilyCodesAndValues(key, familyDictionary[key]);
+                }
             }
 
+            if (DebugMenu)
+            {
+                Display.PrintWordFamilyChosen(code);
+            }
+
+            // remove words not in selected family
             RemoveWordsFromWordList(code);
         }
 
@@ -347,6 +355,7 @@ namespace WordFamilies
                         count++;
                     }
                 }
+
                 Display.PrintCorrectGuess(LastGuess, count);
             }
         }

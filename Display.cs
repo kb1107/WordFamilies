@@ -97,7 +97,7 @@ namespace WordFamilies
 
         public static void PrintWordFamilyChosen(string family)
         {
-            Console.WriteLine("Family Chosen: " + family);
+            Console.WriteLine("\nFamily Chosen: " + family);
         }
     }
 }
