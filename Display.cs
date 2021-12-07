@@ -92,7 +92,7 @@ namespace WordFamilies
 
         public static void PrintWordFamilyCodesAndValues(string family, int count)
         {
-            Console.WriteLine("Family Code: " + family + " Count: " + count);
+            Console.WriteLine("Family Code: " + family + " Value: " + count);
         }
 
         public static void PrintWordFamilyChosen(string family)
