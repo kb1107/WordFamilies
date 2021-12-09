@@ -87,15 +87,22 @@ namespace WordFamilies
 
         public void PromptGuess()
         {
-            bool validGuess = false; //guess > 96 && guess < 123;
-            char guess = ' '; //Console.ReadLine().ToLower()[0]; // get guess from user
+            bool validGuess = false;
+            char guess = ' ';
 
             while (!validGuess)
             {
                 Display.PromptGuess();
-                guess = Console.ReadLine().ToLower()[0]; // get guess from user
+                try
+                {
+                    guess = Console.ReadLine().ToLower()[0]; // get guess from user
+                }
+                catch
+                {
 
-                if (GuessedLetters.Contains(guess) || guess < 97 || guess > 122) //check validity of input
+                }
+
+                if (GuessedLetters.Contains(guess) || guess < 97 || guess > 122 || guess == 32) //check validity of input
                 {
                     Display.PrintInvalidInput();
                 }
