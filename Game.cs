@@ -102,7 +102,7 @@ namespace WordFamilies
 
                 }
 
-                if (GuessedLetters.Contains(guess) || guess < 97 || guess > 122 || guess == 32) //check validity of input
+                if (GuessedLetters.Contains(guess) || guess < 97 || guess > 122) //check validity of input
                 {
                     Display.PrintInvalidInput();
                 }
